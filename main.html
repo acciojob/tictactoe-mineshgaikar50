@@ -7,21 +7,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div id="input-section">
-            <h1>TIC TAC TOE</h1>
-            <input type="text" id="player-1" placeholder="Enter Name">
-            <input type="text" id="player-2" placeholder="Enter Name">
-            <button id="submit">Start Game</button>
-        </div>
-        <div id="game-section" style="display: none;">
-            <h1>Tic Tac Toe</h1>
-            <div class="message" id="turn-message"></div>
-            <div id="board" class="board">
-                <!-- Cells will be dynamically generated -->
-            </div>
-        </div>
+<div class="container">
+    <h1 class="title">TIC TAC TOE</h1>
+    <div class="form">
+        <label for="player1">Player 1</label>
+        <input type="text" id="player1" placeholder="enter name">
+
+        <label for="player2">Player 2</label>
+        <input type="text" id="player2" placeholder="enter name">
+
+        <button id="start-game">Start Game</button>
     </div>
-    <script src="script.js"></script>
+</div>
+<script src="./script.js"></script>
 </body>
 </html>
