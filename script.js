@@ -1,101 +1,85 @@
-// Variables to store player names, current turn, and game state
-let player1 = '';
-let player2 = '';
-let currentPlayer = '';
-let gameBoard = ['', '', '', '', '', '', '', '', ''];
-let gameActive = true;
-
-// Winning combinations
-const winningCombinations = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-    [0, 4, 8], [2, 4, 6]             // Diagonals
-];
-
-// Start Game Button Event Listener
-document.getElementById('start-game').addEventListener('click', () => {
-    const player1Input = document.getElementById('player1').value.trim();
-    const player2Input = document.getElementById('player2').value.trim();
-
-    if (!player1Input || !player2Input) {
-        alert('Please enter names for both players.');
-        return;
-    }
-
-    // Initialize player names and current turn
-    player1 = player1Input;
-    player2 = player2Input;
-    currentPlayer = player1;
-
-    // Show the board and clear previous messages
-    document.getElementById('board').innerHTML = '';
-    document.querySelector('.message').textContent = `${player1}, you're up!`;
-    createBoard();
-});
-
-// Function to create the Tic Tac Toe board
-function createBoard() {
-    const board = document.getElementById('board');
-    board.style.display = 'grid';
-    board.style.gridTemplateColumns = 'repeat(3, 100px)';
-    board.style.gridGap = '5px';
-
-    // Reset game state
-    gameBoard = ['', '', '', '', '', '', '', '', ''];
-    gameActive = true;
-
-    // Create 9 cells
-    for (let i = 0; i < 9; i++) {
-        const cell = document.createElement('div');
-        cell.id = i;
-        cell.className = 'cell';
-        cell.style.width = '100px';
-        cell.style.height = '100px';
-        cell.style.border = '1px solid #000';
-        cell.style.display = 'flex';
-        cell.style.justifyContent = 'center';
-        cell.style.alignItems = 'center';
-        cell.style.fontSize = '24px';
-        cell.style.cursor = 'pointer';
-        cell.addEventListener('click', () => handleCellClick(i));
-        board.appendChild(cell);
-    }
-}
-
-// Handle Cell Click
-function handleCellClick(index) {
-    if (!gameActive || gameBoard[index] !== '') return;
-
-    // Mark the cell for the current player
-    gameBoard[index] = currentPlayer === player1 ? 'x' : 'o';
-    document.getElementById(index).textContent = gameBoard[index];
-
-    // Check for a winner or draw
-    if (checkWinner()) {
-        document.querySelector('.message').textContent = `${currentPlayer}, congratulations you won!`;
-        gameActive = false;
-        return;
-    }
-
-    if (gameBoard.every(cell => cell !== '')) {
-        document.querySelector('.message').textContent = "It's a draw!";
-        gameActive = false;
-        return;
-    }
-
-    // Switch turns
-    currentPlayer = currentPlayer === player1 ? player2 : player1;
-    document.querySelector('.message').textContent = `${currentPlayer}, you're up!`;
-}
-
-// Check for a Winner
-function checkWinner() {
-    return winningCombinations.some(combination => {
-        const [a, b, c] = combination;
-        return (
-            gameBoard[a] !== '' &&
-            gameBoard[a] === gameBoard[b] &&
-            gameBoard[b] === gameBoard[c]
-        );
-    });
-}
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1 {
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  label {
+    font-size: 1.2rem;
+  }
+  
+  input {
+    padding: 8px;
+    margin: 5px 0 10px;
+    font-size: 1rem;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: 2px solid black;
+    background-color: white;
+    border-radius: 5px;
+    transition: 0.3s;
+  }
+  
+  button:hover {
+    background-color: black;
+    color: white;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Takes full viewport height */
+    margin: 0;
+  }
+  /* Board Styles */
+  .board {
+    
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px;
+    margin: 20px auto;
+  }
+  
+  .cell {
+    background-color: pink;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid black;
+  }
+  
+  .cell.taken {
+    pointer-events: none; /* Prevent clicking a filled cell */
+  }
+  .winning-cell {
+    background-color: #81007f !important;
+    color: white; /* Ensures text is visible on the new background */
+  }
+  
+  /* Message */
+  .message {
+    font-size: 1.5rem;
+    margin: 10px;
+  }
+  
