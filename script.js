@@ -1,85 +1,63 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
+let player1Name = "";
+let player2Name = "";
+let currentPlayer = "X";
+let board = ["", "", "", "", "", "", "", "", ""];
+const cells = document.querySelectorAll(".cell");
+
+// Event Listener for Submit Button
+document.getElementById("submit").addEventListener("click", () => {
+  player1Name = document.getElementById("player-1").value || "Player 1";
+  player2Name = document.getElementById("player-2").value || "Player 2";
+
+  document.getElementById("input-section").style.display = "none";
+  document.getElementById("game-section").style.display = "block";
+  document.getElementById("message").textContent = `${player1Name}, you're up`;
+});
+
+// Adding Event Listeners to Cells
+document.querySelectorAll(".cell").forEach((cell) => {
+  cell.addEventListener("click", handleCellClick);
+});
+
+function handleCellClick(event) {
+  const cell = event.target;
+  const cellIndex = parseInt(cell.id) - 1;
+
+  if (board[cellIndex] === "") {
+    board[cellIndex] = currentPlayer;
+    cell.textContent = currentPlayer;
+    cell.classList.add("taken");
+
+    if (checkWin()) {
+      const winnerName = currentPlayer === "X" ? player1Name : player2Name;
+      document.getElementById("message").textContent = `${winnerName}, congratulations you won!`;
+      disableBoard();
+      return;
+    }
+
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+    const nextPlayerName = currentPlayer === "X" ? player1Name : player2Name;
+    document.getElementById("message").textContent = `${nextPlayerName}, you're up`;
   }
+}
+
+function checkWin() {
+    const winPatterns = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+      [0, 4, 8], [2, 4, 6]             // Diagonals
+    ];
   
-  h1 {
-    font-family: 'Comic Sans MS', cursive;
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-  }
-  
-  label {
-    font-size: 1.2rem;
-  }
-  
-  input {
-    padding: 8px;
-    margin: 5px 0 10px;
-    font-size: 1rem;
-    text-align: center;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: 2px solid black;
-    background-color: white;
-    border-radius: 5px;
-    transition: 0.3s;
-  }
-  
-  button:hover {
-    background-color: black;
-    color: white;
-  }
-  .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Takes full viewport height */
-    margin: 0;
-  }
-  /* Board Styles */
-  .board {
-    
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-    gap: 5px;
-    margin: 20px auto;
-  }
-  
-  .cell {
-    background-color: pink;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    border: 2px solid black;
-  }
-  
-  .cell.taken {
-    pointer-events: none; /* Prevent clicking a filled cell */
-  }
-  .winning-cell {
-    background-color: #81007f !important;
-    color: white; /* Ensures text is visible on the new background */
-  }
-  
-  /* Message */
-  .message {
-    font-size: 1.5rem;
-    margin: 10px;
+    // Check if any win pattern is satisfied
+    for (let pattern of winPatterns) {
+      if (pattern.every(index => board[index] === currentPlayer)) {
+        // Highlight the winning cells
+        pattern.forEach(index => {
+          document.getElementById(index + 1).classList.add("winning-cell");
+        });
+        return true; // Return true if there's a win
+      }
+    }
+    return false; // No win yet
   }
   
